@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 1 Supervised Regression Modelling | ML Guide</title>
+  <meta name="description" content="Guide to using caret for supervised regression modelling in R with data visualization" />
+  <meta name="generator" content="bookdown 0.20.6 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 1 Supervised Regression Modelling | ML Guide" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Guide to using caret for supervised regression modelling in R with data visualization" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 1 Supervised Regression Modelling | ML Guide" />
+  
+  <meta name="twitter:description" content="Guide to using caret for supervised regression modelling in R with data visualization" />
+  
+
+<meta name="author" content="Greg Rompala" />
+
+
+<meta name="date" content="2020-10-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">ML Regression Modelling</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="supervised-regression-modelling.html"><a href="supervised-regression-modelling.html"><i class="fa fa-check"></i><b>1</b> Supervised Regression Modelling</a><ul>
+<li class="chapter" data-level="1.1" data-path="supervised-regression-modelling.html"><a href="supervised-regression-modelling.html#training-and-testing"><i class="fa fa-check"></i><b>1.1</b> Training and Testing</a></li>
+<li class="chapter" data-level="1.2" data-path="supervised-regression-modelling.html"><a href="supervised-regression-modelling.html#examining-the-results"><i class="fa fa-check"></i><b>1.2</b> Examining the Results</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">ML Guide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="supervised-regression-modelling" class="section level1">
+<h1><span class="header-section-number">Chapter 1</span> Supervised Regression Modelling</h1>
+<p><img src="ML.image.png" />
+This is the basic framework. Nested CV will allow for using several training-test paritions in parallel in the outer loop.
+The inner-loop features cross-validation with 5 folds of the training data. Finally, backward selection of gene features
+allows you to build new models with a specified amout of “most important” features as determined from the training model.</p>
+<div id="training-and-testing" class="section level2">
+<h2><span class="header-section-number">1.1</span> Training and Testing</h2>
+<p>Here we are going to use placental gene expression to predict maternal age and emotional regulation in children.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="supervised-regression-modelling.html#cb1-1"></a><span class="co"># Load necessary packages</span></span>
+<span id="cb1-2"><a href="supervised-regression-modelling.html#cb1-2"></a><span class="kw">suppressPackageStartupMessages</span>({</span>
+<span id="cb1-3"><a href="supervised-regression-modelling.html#cb1-3"></a><span class="kw">library</span>(caret)</span>
+<span id="cb1-4"><a href="supervised-regression-modelling.html#cb1-4"></a><span class="kw">library</span>(DESeq2)</span>
+<span id="cb1-5"><a href="supervised-regression-modelling.html#cb1-5"></a><span class="kw">library</span>(e1071)</span>
+<span id="cb1-6"><a href="supervised-regression-modelling.html#cb1-6"></a><span class="kw">library</span>(pROC)</span>
+<span id="cb1-7"><a href="supervised-regression-modelling.html#cb1-7"></a><span class="kw">library</span>(plyr)</span>
+<span id="cb1-8"><a href="supervised-regression-modelling.html#cb1-8"></a><span class="kw">library</span>(stringr)</span>
+<span id="cb1-9"><a href="supervised-regression-modelling.html#cb1-9"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb1-10"><a href="supervised-regression-modelling.html#cb1-10"></a><span class="kw">library</span>(mboost)</span>
+<span id="cb1-11"><a href="supervised-regression-modelling.html#cb1-11"></a><span class="kw">library</span>(gbm)</span>
+<span id="cb1-12"><a href="supervised-regression-modelling.html#cb1-12"></a><span class="kw">library</span>(DESeq2)</span>
+<span id="cb1-13"><a href="supervised-regression-modelling.html#cb1-13"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb1-14"><a href="supervised-regression-modelling.html#cb1-14"></a><span class="kw">library</span>(pls)</span>
+<span id="cb1-15"><a href="supervised-regression-modelling.html#cb1-15"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb1-16"><a href="supervised-regression-modelling.html#cb1-16"></a><span class="kw">library</span>(ggpubr)</span>
+<span id="cb1-17"><a href="supervised-regression-modelling.html#cb1-17"></a><span class="kw">library</span>(gganimate)</span>
+<span id="cb1-18"><a href="supervised-regression-modelling.html#cb1-18"></a><span class="kw">library</span>(gapminder)</span>
+<span id="cb1-19"><a href="supervised-regression-modelling.html#cb1-19"></a><span class="kw">library</span>(cowplot)</span>
+<span id="cb1-20"><a href="supervised-regression-modelling.html#cb1-20"></a><span class="kw">library</span>(directlabels)</span>
+<span id="cb1-21"><a href="supervised-regression-modelling.html#cb1-21"></a><span class="kw">library</span>(gifski)</span>
+<span id="cb1-22"><a href="supervised-regression-modelling.html#cb1-22"></a><span class="kw">library</span>(transformr)</span>
+<span id="cb1-23"><a href="supervised-regression-modelling.html#cb1-23"></a><span class="kw">library</span>(RUncommon)</span>
+<span id="cb1-24"><a href="supervised-regression-modelling.html#cb1-24"></a></span>
+<span id="cb1-25"><a href="supervised-regression-modelling.html#cb1-25"></a>                              })</span>
+<span id="cb1-26"><a href="supervised-regression-modelling.html#cb1-26"></a></span>
+<span id="cb1-27"><a href="supervised-regression-modelling.html#cb1-27"></a></span>
+<span id="cb1-28"><a href="supervised-regression-modelling.html#cb1-28"></a>working.dir=<span class="st">&quot;C:/Users/grrompala/Desktop&quot;</span>  <span class="co"># working directory</span></span>
+<span id="cb1-29"><a href="supervised-regression-modelling.html#cb1-29"></a><span class="kw">setwd</span>(working.dir)</span>
+<span id="cb1-30"><a href="supervised-regression-modelling.html#cb1-30"></a></span>
+<span id="cb1-31"><a href="supervised-regression-modelling.html#cb1-31"></a><span class="co"># Load in your gene counts and metadata </span></span>
+<span id="cb1-32"><a href="supervised-regression-modelling.html#cb1-32"></a>counts &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;counts.csv&quot;</span>,<span class="dt">header=</span>T,<span class="dt">row.names=</span><span class="dv">1</span>) <span class="co"># raw gene counts for each subject</span></span>
+<span id="cb1-33"><a href="supervised-regression-modelling.html#cb1-33"></a>meta &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;meta.csv&quot;</span>,<span class="dt">header=</span>T,<span class="dt">row.names=</span><span class="dv">1</span>) <span class="co"># metadata with 2 outcomes we will predict for each subject</span></span>
+<span id="cb1-34"><a href="supervised-regression-modelling.html#cb1-34"></a></span>
+<span id="cb1-35"><a href="supervised-regression-modelling.html#cb1-35"></a><span class="kw">head</span>(counts[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>])</span></code></pre></div>
+<pre><code>##            S_1  S_10 S_100 S_103 S_106 S_107 S_108 S_109 S_10Q  S_11
+## A1BG-AS1    16    16    16    14    23    15    26    16    13     9
+## A2M      30620 14070 24203 31400 43652 30419 34490 22477 33795 10351
+## A2M-AS1     20    18    38    28    17    27    27    29    22    12
+## A2ML1      165    22     7     4    31     8    14    10    13    18
+## A2MP1        3     3    18    16     5     1    19    23    11    12
+## A4GALT    1168   516   702   607  1147   462   687   822   628   622</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="supervised-regression-modelling.html#cb3-1"></a><span class="kw">head</span>(meta[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,])</span></code></pre></div>
+<pre><code>##       STAI_TTO      REG
+## S_1         20 6.583333
+## S_10        34 4.345238
+## S_100       36 4.960000
+## S_103       27 6.232143
+## S_106       41 5.540000
+## S_107       31 4.600000</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="supervised-regression-modelling.html#cb5-1"></a><span class="co"># Filter and normalize gene counts: we will use rowMeans&gt;10 as a filter</span></span>
+<span id="cb5-2"><a href="supervised-regression-modelling.html#cb5-2"></a>counts &lt;-<span class="st"> </span>counts[<span class="kw">rowMeans</span>(counts)<span class="op">&gt;</span><span class="dv">10</span>,]</span>
+<span id="cb5-3"><a href="supervised-regression-modelling.html#cb5-3"></a>counts &lt;-<span class="st"> </span><span class="kw">varianceStabilizingTransformation</span>(<span class="kw">as.matrix</span>(counts))</span>
+<span id="cb5-4"><a href="supervised-regression-modelling.html#cb5-4"></a>counts &lt;-<span class="st"> </span><span class="kw">t</span>(counts)</span>
+<span id="cb5-5"><a href="supervised-regression-modelling.html#cb5-5"></a><span class="co"># Filter metadata and subjects that are missing metadata for mom age or child emotional regulation</span></span></code></pre></div>
+<p>Here we will employ common techniques employed to reduce number of predictors that may be introducing noise</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="supervised-regression-modelling.html#cb6-1"></a><span class="co"># Filter counts by coefficient of variance</span></span>
+<span id="cb6-2"><a href="supervised-regression-modelling.html#cb6-2"></a>coef.var&lt;-<span class="kw">apply</span>(<span class="kw">subset</span>(counts),<span class="dv">2</span>,<span class="cf">function</span>(x)<span class="kw">sd</span>(x)<span class="op">/</span><span class="kw">mean</span>(x)) <span class="co"># calculate coefficent of variance (CV)</span></span>
+<span id="cb6-3"><a href="supervised-regression-modelling.html#cb6-3"></a>genes2keep&lt;-<span class="kw">names</span>(coef.var)[<span class="kw">which</span>(coef.var<span class="op">&gt;</span><span class="fl">0.05</span>)]      <span class="co"># extract genes to keep after CV threshold</span></span>
+<span id="cb6-4"><a href="supervised-regression-modelling.html#cb6-4"></a>coef_counts&lt;-counts[,<span class="kw">c</span>(genes2keep)]     <span class="co"># filter by genes to keep</span></span>
+<span id="cb6-5"><a href="supervised-regression-modelling.html#cb6-5"></a></span>
+<span id="cb6-6"><a href="supervised-regression-modelling.html#cb6-6"></a><span class="co">#paste(&quot;Number of Genes Remaining:&quot;,length(colnames(coef_counts)),sep=&quot; &quot;)</span></span>
+<span id="cb6-7"><a href="supervised-regression-modelling.html#cb6-7"></a></span>
+<span id="cb6-8"><a href="supervised-regression-modelling.html#cb6-8"></a><span class="co"># Filter counts using dimensionality reduction</span></span>
+<span id="cb6-9"><a href="supervised-regression-modelling.html#cb6-9"></a>CorrelationMatrix&lt;-<span class="kw">cor</span>(coef_counts[,<span class="op">-</span><span class="dv">1</span>]) </span>
+<span id="cb6-10"><a href="supervised-regression-modelling.html#cb6-10"></a>highlyCorrelated&lt;-<span class="kw">findCorrelation</span>(CorrelationMatrix,<span class="dt">cutoff=</span><span class="fl">0.9</span>,<span class="dt">names=</span><span class="ot">TRUE</span>) <span class="co"># Filters genes with correlation R values greater than 0.8 (keeping the gene with least co-linearity)</span></span>
+<span id="cb6-11"><a href="supervised-regression-modelling.html#cb6-11"></a>COUNTS &lt;-coef_counts[,<span class="kw">setdiff</span>(<span class="kw">colnames</span>(coef_counts),highlyCorrelated)]</span>
+<span id="cb6-12"><a href="supervised-regression-modelling.html#cb6-12"></a><span class="kw">paste</span>(<span class="st">&quot;Number of Genes Remaining:&quot;</span>,<span class="kw">length</span>(<span class="kw">colnames</span>(COUNTS)),<span class="dt">sep=</span><span class="st">&quot; &quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;Number of Genes Remaining: 5885&quot;</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="supervised-regression-modelling.html#cb8-1"></a><span class="kw">set.seed</span>(<span class="dv">1097</span>) <span class="co"># Set seed for reproducible results!</span></span></code></pre></div>
+<p>Now, we will loop through our two outcome variables,
+building a partial least squares regression model for each</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="supervised-regression-modelling.html#cb9-1"></a><span class="co">#global-options,include=TRUE,warning=FALSE}</span></span>
+<span id="cb9-2"><a href="supervised-regression-modelling.html#cb9-2"></a><span class="co">#knitr::opts_chunk$set(warning=FALSE,message=FALSE,include=FALSE) # Settings to repress warning messages in the chunk</span></span>
+<span id="cb9-3"><a href="supervised-regression-modelling.html#cb9-3"></a></span>
+<span id="cb9-4"><a href="supervised-regression-modelling.html#cb9-4"></a><span class="kw">options</span>(<span class="dt">width =</span> <span class="dv">60</span>)</span>
+<span id="cb9-5"><a href="supervised-regression-modelling.html#cb9-5"></a></span>
+<span id="cb9-6"><a href="supervised-regression-modelling.html#cb9-6"></a>outcomes &lt;-<span class="st"> </span><span class="kw">colnames</span>(meta) <span class="co"># should be mother&#39;s trait anxiety and emotional regulation as vector</span></span>
+<span id="cb9-7"><a href="supervised-regression-modelling.html#cb9-7"></a>model &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;glmnet&quot;</span>) <span class="co"># set model</span></span>
+<span id="cb9-8"><a href="supervised-regression-modelling.html#cb9-8"></a>variables &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">100</span>,<span class="dv">1000</span>,<span class="dv">5000</span>) <span class="co"># Set how many ranked important variables to rebuild model with</span></span>
+<span id="cb9-9"><a href="supervised-regression-modelling.html#cb9-9"></a></span>
+<span id="cb9-10"><a href="supervised-regression-modelling.html#cb9-10"></a></span>
+<span id="cb9-11"><a href="supervised-regression-modelling.html#cb9-11"></a><span class="co"># Initialize data summaries</span></span>
+<span id="cb9-12"><a href="supervised-regression-modelling.html#cb9-12"></a>final.summary &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Buffer=</span><span class="kw">character</span>(),<span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb9-13"><a href="supervised-regression-modelling.html#cb9-13"></a>all.predictions &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">holder=</span><span class="kw">character</span>(),                          <span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)</span>
+<span id="cb9-14"><a href="supervised-regression-modelling.html#cb9-14"></a>resample.summary &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">holder=</span><span class="kw">character</span>(), <span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)</span>
+<span id="cb9-15"><a href="supervised-regression-modelling.html#cb9-15"></a>varImp.summary &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">blank=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb9-16"><a href="supervised-regression-modelling.html#cb9-16"></a></span>
+<span id="cb9-17"><a href="supervised-regression-modelling.html#cb9-17"></a></span>
+<span id="cb9-18"><a href="supervised-regression-modelling.html#cb9-18"></a><span class="co"># Looping through both traits and both features cut-offs (100,1000)</span></span>
+<span id="cb9-19"><a href="supervised-regression-modelling.html#cb9-19"></a></span>
+<span id="cb9-20"><a href="supervised-regression-modelling.html#cb9-20"></a>  <span class="cf">for</span> (trait <span class="cf">in</span> outcomes)</span>
+<span id="cb9-21"><a href="supervised-regression-modelling.html#cb9-21"></a>  {</span>
+<span id="cb9-22"><a href="supervised-regression-modelling.html#cb9-22"></a>   metaF &lt;-<span class="st"> </span>meta <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="kw">is.na</span>(meta[[trait]])<span class="op">==</span>F) <span class="co"># filter out NAs from outcome variable</span></span>
+<span id="cb9-23"><a href="supervised-regression-modelling.html#cb9-23"></a>   counts &lt;-<span class="st"> </span>COUNTS[<span class="kw">rownames</span>(metaF),] <span class="co"># filter subjects in counts with new metadata</span></span>
+<span id="cb9-24"><a href="supervised-regression-modelling.html#cb9-24"></a>   working.META &lt;-<span class="st"> </span>metaF[[trait]] <span class="co"># filters metadata for outcome </span></span>
+<span id="cb9-25"><a href="supervised-regression-modelling.html#cb9-25"></a>   <span class="kw">names</span>(working.META) &lt;-<span class="st"> </span><span class="kw">rownames</span>(metaF)</span>
+<span id="cb9-26"><a href="supervised-regression-modelling.html#cb9-26"></a>   </span>
+<span id="cb9-27"><a href="supervised-regression-modelling.html#cb9-27"></a>   train.parts &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(working.META,<span class="dt">p=</span><span class="fl">0.8</span>,<span class="dt">list=</span><span class="ot">TRUE</span>,<span class="dt">times=</span><span class="dv">10</span>) <span class="co"># makes training and test sets </span></span>
+<span id="cb9-28"><a href="supervised-regression-modelling.html#cb9-28"></a>   <span class="co">#(Here I am making 25 training-test splits of 80% train and 20% test)</span></span>
+<span id="cb9-29"><a href="supervised-regression-modelling.html#cb9-29"></a>   </span>
+<span id="cb9-30"><a href="supervised-regression-modelling.html#cb9-30"></a>   cv.settings &lt;-<span class="st"> </span><span class="kw">trainControl</span>(<span class="dt">method=</span><span class="st">&quot;repeatedcv&quot;</span>,<span class="dt">number=</span><span class="dv">5</span>,<span class="dt">repeats=</span><span class="dv">3</span>) <span class="co"># cross-validation with</span></span>
+<span id="cb9-31"><a href="supervised-regression-modelling.html#cb9-31"></a>   <span class="co">#splits data into 5 folds and repeats this three times</span></span>
+<span id="cb9-32"><a href="supervised-regression-modelling.html#cb9-32"></a></span>
+<span id="cb9-33"><a href="supervised-regression-modelling.html#cb9-33"></a>   <span class="co"># Train regression model for each of your partitions</span></span>
+<span id="cb9-34"><a href="supervised-regression-modelling.html#cb9-34"></a>   </span>
+<span id="cb9-35"><a href="supervised-regression-modelling.html#cb9-35"></a>   Regression.Models &lt;-<span class="kw">lapply</span>(train.parts, <span class="cf">function</span>(L){</span>
+<span id="cb9-36"><a href="supervised-regression-modelling.html#cb9-36"></a>   X.train &lt;-<span class="st"> </span>counts[L,]</span>
+<span id="cb9-37"><a href="supervised-regression-modelling.html#cb9-37"></a>   Y.train &lt;-<span class="st"> </span>working.META[L]</span>
+<span id="cb9-38"><a href="supervised-regression-modelling.html#cb9-38"></a>   train.parts &lt;-<span class="st"> </span><span class="kw">rownames</span>(X.train)</span>
+<span id="cb9-39"><a href="supervised-regression-modelling.html#cb9-39"></a>   model.one &lt;-<span class="kw">train</span>(<span class="dt">y=</span>Y.train,</span>
+<span id="cb9-40"><a href="supervised-regression-modelling.html#cb9-40"></a>                     <span class="dt">x=</span>X.train,</span>
+<span id="cb9-41"><a href="supervised-regression-modelling.html#cb9-41"></a>                     <span class="dt">method=</span>model,</span>
+<span id="cb9-42"><a href="supervised-regression-modelling.html#cb9-42"></a>                     <span class="dt">trControl =</span> cv.settings,</span>
+<span id="cb9-43"><a href="supervised-regression-modelling.html#cb9-43"></a>                     <span class="dt">trace=</span><span class="ot">FALSE</span>)</span>
+<span id="cb9-44"><a href="supervised-regression-modelling.html#cb9-44"></a>   importance&lt;-<span class="st"> </span><span class="kw">varImp</span>(model.one)<span class="op">$</span>importance <span class="co"># outputs variables ranked by importance score</span></span>
+<span id="cb9-45"><a href="supervised-regression-modelling.html#cb9-45"></a>   TrainID&lt;-<span class="kw">names</span>(Y.train)</span>
+<span id="cb9-46"><a href="supervised-regression-modelling.html#cb9-46"></a>   <span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">MODEL=</span>model.one,<span class="dt">TrainID=</span>TrainID,<span class="dt">importance=</span>importance,<span class="dt">train.parts=</span>train.parts)) })</span>
+<span id="cb9-47"><a href="supervised-regression-modelling.html#cb9-47"></a></span>
+<span id="cb9-48"><a href="supervised-regression-modelling.html#cb9-48"></a>   <span class="co"># Empty DFs to iterate through different feature variable cut-offs</span></span>
+<span id="cb9-49"><a href="supervised-regression-modelling.html#cb9-49"></a>   df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">New=</span><span class="kw">character</span>(), <span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)</span>
+<span id="cb9-50"><a href="supervised-regression-modelling.html#cb9-50"></a>   predictionsT &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">New=</span><span class="kw">character</span>(), <span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)</span>
+<span id="cb9-51"><a href="supervised-regression-modelling.html#cb9-51"></a>   resamplesT  &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">New=</span><span class="kw">character</span>(), <span class="dt">stringsAsFactors=</span><span class="ot">FALSE</span>)</span>
+<span id="cb9-52"><a href="supervised-regression-modelling.html#cb9-52"></a>   </span>
+<span id="cb9-53"><a href="supervised-regression-modelling.html#cb9-53"></a>    <span class="cf">for</span> (import_num <span class="cf">in</span> variables) <span class="co"># Choose a few important variable cutoffs</span></span>
+<span id="cb9-54"><a href="supervised-regression-modelling.html#cb9-54"></a>    {</span>
+<span id="cb9-55"><a href="supervised-regression-modelling.html#cb9-55"></a>    </span>
+<span id="cb9-56"><a href="supervised-regression-modelling.html#cb9-56"></a>     VarImport.Models &lt;-<span class="st"> </span><span class="kw">lapply</span>(Regression.Models, <span class="cf">function</span>(L){</span>
+<span id="cb9-57"><a href="supervised-regression-modelling.html#cb9-57"></a>     importance &lt;-<span class="st"> </span>L<span class="op">$</span>importance</span>
+<span id="cb9-58"><a href="supervised-regression-modelling.html#cb9-58"></a>     varImps &lt;-<span class="st"> </span><span class="kw">rownames</span>(importance[<span class="kw">order</span>(importance<span class="op">$</span>Overall,<span class="dt">decreasing=</span>T),,<span class="dt">drop=</span><span class="ot">FALSE</span>])[<span class="dv">1</span><span class="op">:</span>import_num]</span>
+<span id="cb9-59"><a href="supervised-regression-modelling.html#cb9-59"></a>     varImps &lt;-<span class="st"> </span><span class="kw">str_remove_all</span>(varImps,<span class="st">&quot;`&quot;</span>)</span>
+<span id="cb9-60"><a href="supervised-regression-modelling.html#cb9-60"></a>     train.parts &lt;-<span class="st"> </span>L<span class="op">$</span>train.parts</span>
+<span id="cb9-61"><a href="supervised-regression-modelling.html#cb9-61"></a>     X.train&lt;-<span class="st"> </span>counts[train.parts,varImps]</span>
+<span id="cb9-62"><a href="supervised-regression-modelling.html#cb9-62"></a>     Y.train&lt;-<span class="st"> </span>working.META[train.parts]</span>
+<span id="cb9-63"><a href="supervised-regression-modelling.html#cb9-63"></a>     model.one &lt;-<span class="kw">train</span>(<span class="dt">y=</span>Y.train,</span>
+<span id="cb9-64"><a href="supervised-regression-modelling.html#cb9-64"></a>                       <span class="dt">x=</span>X.train,</span>
+<span id="cb9-65"><a href="supervised-regression-modelling.html#cb9-65"></a>                       <span class="dt">method=</span>model,</span>
+<span id="cb9-66"><a href="supervised-regression-modelling.html#cb9-66"></a>                       <span class="dt">trControl =</span> cv.settings,</span>
+<span id="cb9-67"><a href="supervised-regression-modelling.html#cb9-67"></a>                       <span class="dt">trace=</span><span class="ot">FALSE</span>)</span>
+<span id="cb9-68"><a href="supervised-regression-modelling.html#cb9-68"></a>     TrainID&lt;-<span class="kw">names</span>(Y.train)</span>
+<span id="cb9-69"><a href="supervised-regression-modelling.html#cb9-69"></a>     <span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">MODEL=</span>model.one,<span class="dt">TrainID=</span>TrainID,<span class="dt">varImps=</span>varImps))})</span>
+<span id="cb9-70"><a href="supervised-regression-modelling.html#cb9-70"></a></span>
+<span id="cb9-71"><a href="supervised-regression-modelling.html#cb9-71"></a>     <span class="co"># Compile model results</span></span>
+<span id="cb9-72"><a href="supervised-regression-modelling.html#cb9-72"></a>     VarImport.Models.Results &lt;-<span class="st"> </span><span class="kw">lapply</span>(VarImport.Models,<span class="cf">function</span>(L){</span>
+<span id="cb9-73"><a href="supervised-regression-modelling.html#cb9-73"></a>     ok&lt;-<span class="st"> </span><span class="kw">getTrainPerf</span>(L<span class="op">$</span>MODEL)</span>
+<span id="cb9-74"><a href="supervised-regression-modelling.html#cb9-74"></a>       <span class="kw">return</span>(ok) })</span>
+<span id="cb9-75"><a href="supervised-regression-modelling.html#cb9-75"></a>     RM.Results &lt;-<span class="st"> </span><span class="kw">ldply</span>(VarImport.Models.Results,rbind)</span>
+<span id="cb9-76"><a href="supervised-regression-modelling.html#cb9-76"></a></span>
+<span id="cb9-77"><a href="supervised-regression-modelling.html#cb9-77"></a>     <span class="co"># Use trained model on test dataset</span></span>
+<span id="cb9-78"><a href="supervised-regression-modelling.html#cb9-78"></a>     Regression.Predictions&lt;-<span class="kw">lapply</span>(VarImport.Models, <span class="cf">function</span>(L){</span>
+<span id="cb9-79"><a href="supervised-regression-modelling.html#cb9-79"></a>     TrainID&lt;-L<span class="op">$</span>TrainID</span>
+<span id="cb9-80"><a href="supervised-regression-modelling.html#cb9-80"></a>     TestID&lt;-<span class="kw">setdiff</span>(<span class="kw">rownames</span>(counts),TrainID)</span>
+<span id="cb9-81"><a href="supervised-regression-modelling.html#cb9-81"></a>     MODEL&lt;-L<span class="op">$</span>MODEL</span>
+<span id="cb9-82"><a href="supervised-regression-modelling.html#cb9-82"></a>     varImps &lt;-<span class="st"> </span>L<span class="op">$</span>varImps</span>
+<span id="cb9-83"><a href="supervised-regression-modelling.html#cb9-83"></a>     X.test&lt;-<span class="st"> </span>counts[TestID,varImps]</span>
+<span id="cb9-84"><a href="supervised-regression-modelling.html#cb9-84"></a>     Y.test&lt;-working.META[TestID] </span>
+<span id="cb9-85"><a href="supervised-regression-modelling.html#cb9-85"></a>     model.preds&lt;-<span class="kw">predict</span>(MODEL,X.test)</span>
+<span id="cb9-86"><a href="supervised-regression-modelling.html#cb9-86"></a>     table.preds&lt;-<span class="kw">cbind.data.frame</span>(<span class="dt">PRED=</span>model.preds,<span class="dt">REAL=</span>Y.test)</span>
+<span id="cb9-87"><a href="supervised-regression-modelling.html#cb9-87"></a>     table.preds<span class="op">$</span>SampleID&lt;-<span class="kw">rownames</span>(table.preds)</span>
+<span id="cb9-88"><a href="supervised-regression-modelling.html#cb9-88"></a>     RMSE &lt;-<span class="st"> </span><span class="kw">RMSE</span>(model.preds,Y.test)</span>
+<span id="cb9-89"><a href="supervised-regression-modelling.html#cb9-89"></a>     correlation &lt;-<span class="st"> </span><span class="kw">cor</span>(model.preds,Y.test)</span>
+<span id="cb9-90"><a href="supervised-regression-modelling.html#cb9-90"></a>     <span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">testRMSE=</span>RMSE,<span class="dt">table.preds=</span>table.preds,<span class="dt">testR=</span>correlation))})</span>
+<span id="cb9-91"><a href="supervised-regression-modelling.html#cb9-91"></a>    </span>
+<span id="cb9-92"><a href="supervised-regression-modelling.html#cb9-92"></a>     <span class="co"># Generate best RMSEs and correlation R values for all test partitions </span></span>
+<span id="cb9-93"><a href="supervised-regression-modelling.html#cb9-93"></a>     RMSE &lt;-<span class="st"> </span><span class="kw">lapply</span>(Regression.Predictions,<span class="cf">function</span>(L){</span>
+<span id="cb9-94"><a href="supervised-regression-modelling.html#cb9-94"></a>     RMSE &lt;-<span class="st"> </span>L<span class="op">$</span>testRMSE</span>
+<span id="cb9-95"><a href="supervised-regression-modelling.html#cb9-95"></a>     <span class="kw">return</span>(RMSE)})</span>
+<span id="cb9-96"><a href="supervised-regression-modelling.html#cb9-96"></a>     RMSE &lt;-<span class="kw">do.call</span>(<span class="st">&quot;rbind.data.frame&quot;</span>,RMSE)</span>
+<span id="cb9-97"><a href="supervised-regression-modelling.html#cb9-97"></a>     <span class="kw">colnames</span>(RMSE) &lt;-<span class="st"> </span><span class="ot">NULL</span></span>
+<span id="cb9-98"><a href="supervised-regression-modelling.html#cb9-98"></a>      </span>
+<span id="cb9-99"><a href="supervised-regression-modelling.html#cb9-99"></a>     <span class="co"># Get correlation between predictions and real scores for each train-test partition</span></span>
+<span id="cb9-100"><a href="supervised-regression-modelling.html#cb9-100"></a>     corr &lt;-<span class="st"> </span><span class="kw">lapply</span>(Regression.Predictions,<span class="cf">function</span>(L){</span>
+<span id="cb9-101"><a href="supervised-regression-modelling.html#cb9-101"></a>     corr &lt;-<span class="st"> </span>L<span class="op">$</span>testR</span>
+<span id="cb9-102"><a href="supervised-regression-modelling.html#cb9-102"></a>     <span class="kw">return</span>(corr)})</span>
+<span id="cb9-103"><a href="supervised-regression-modelling.html#cb9-103"></a>     corr &lt;-<span class="kw">do.call</span>(<span class="st">&quot;rbind.data.frame&quot;</span>,corr)</span>
+<span id="cb9-104"><a href="supervised-regression-modelling.html#cb9-104"></a>     <span class="kw">colnames</span>(corr) &lt;-<span class="st"> </span><span class="ot">NULL</span></span>
+<span id="cb9-105"><a href="supervised-regression-modelling.html#cb9-105"></a></span>
+<span id="cb9-106"><a href="supervised-regression-modelling.html#cb9-106"></a>     <span class="co"># Compile results for each resample</span></span>
+<span id="cb9-107"><a href="supervised-regression-modelling.html#cb9-107"></a>     results &lt;-<span class="st"> </span><span class="kw">cbind</span>(RM.Results,RMSE,corr)</span>
+<span id="cb9-108"><a href="supervised-regression-modelling.html#cb9-108"></a>     results<span class="op">$</span>trait &lt;-<span class="st"> </span>trait</span>
+<span id="cb9-109"><a href="supervised-regression-modelling.html#cb9-109"></a>     results<span class="op">$</span>var.num &lt;-<span class="st"> </span>import_num</span>
+<span id="cb9-110"><a href="supervised-regression-modelling.html#cb9-110"></a>     resamplesT &lt;-<span class="st"> </span><span class="kw">rbind.fill</span>(resamplesT,results)</span>
+<span id="cb9-111"><a href="supervised-regression-modelling.html#cb9-111"></a></span>
+<span id="cb9-112"><a href="supervised-regression-modelling.html#cb9-112"></a>     <span class="co">## Compile results summarizing each resample per trait and number of features</span></span>
+<span id="cb9-113"><a href="supervised-regression-modelling.html#cb9-113"></a>     RM.Result &lt;-<span class="st"> </span>RM.Results[,<span class="dv">2</span><span class="op">:</span><span class="dv">4</span>]</span>
+<span id="cb9-114"><a href="supervised-regression-modelling.html#cb9-114"></a>     averages &lt;-<span class="st"> </span><span class="kw">cbind</span>(RM.Result,RMSE,corr)</span>
+<span id="cb9-115"><a href="supervised-regression-modelling.html#cb9-115"></a>     averagez &lt;-<span class="st"> </span><span class="kw">colMeans</span>(averages)</span>
+<span id="cb9-116"><a href="supervised-regression-modelling.html#cb9-116"></a>     averages &lt;-<span class="st"> </span><span class="kw">append</span>(trait,averagez)</span>
+<span id="cb9-117"><a href="supervised-regression-modelling.html#cb9-117"></a>     averages &lt;-<span class="st"> </span><span class="kw">append</span>(import_num,averages)</span>
+<span id="cb9-118"><a href="supervised-regression-modelling.html#cb9-118"></a>     x &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">t</span>(averages))</span>
+<span id="cb9-119"><a href="supervised-regression-modelling.html#cb9-119"></a>     <span class="kw">colnames</span>(x)[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Feature.number&quot;</span>,<span class="st">&quot;Trait&quot;</span>)</span>
+<span id="cb9-120"><a href="supervised-regression-modelling.html#cb9-120"></a>     df &lt;-<span class="st"> </span><span class="kw">rbind.fill</span>(df,x)</span>
+<span id="cb9-121"><a href="supervised-regression-modelling.html#cb9-121"></a></span>
+<span id="cb9-122"><a href="supervised-regression-modelling.html#cb9-122"></a>     <span class="co">## Bind and write all predictions out to file</span></span>
+<span id="cb9-123"><a href="supervised-regression-modelling.html#cb9-123"></a>     Regression.Predictions &lt;-<span class="st"> </span><span class="kw">lapply</span>(Regression.Predictions,<span class="cf">function</span>(L){</span>
+<span id="cb9-124"><a href="supervised-regression-modelling.html#cb9-124"></a>                               Regression.Predictions &lt;-<span class="st"> </span>L<span class="op">$</span>table.preds</span>
+<span id="cb9-125"><a href="supervised-regression-modelling.html#cb9-125"></a>                               <span class="kw">return</span>(Regression.Predictions)})</span>
+<span id="cb9-126"><a href="supervised-regression-modelling.html#cb9-126"></a>     </span>
+<span id="cb9-127"><a href="supervised-regression-modelling.html#cb9-127"></a>     Regression.Predictions &lt;-<span class="st"> </span><span class="kw">mapply</span>(<span class="st">`</span><span class="dt">[&lt;-</span><span class="st">`</span>, Regression.Predictions, <span class="st">&#39;Partition&#39;</span>, <span class="dt">value =</span> <span class="kw">names</span>(Regression.Predictions), <span class="dt">SIMPLIFY =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb9-128"><a href="supervised-regression-modelling.html#cb9-128"></a>     Regression.Predictions &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(Regression.Predictions)</span>
+<span id="cb9-129"><a href="supervised-regression-modelling.html#cb9-129"></a>     Regression.Predictions<span class="op">$</span>trait &lt;-<span class="st"> </span>trait</span>
+<span id="cb9-130"><a href="supervised-regression-modelling.html#cb9-130"></a>     Regression.Predictions<span class="op">$</span>feat.num &lt;-<span class="st"> </span><span class="kw">as.factor</span>(import_num)</span>
+<span id="cb9-131"><a href="supervised-regression-modelling.html#cb9-131"></a>     predictionsT &lt;-<span class="st"> </span><span class="kw">rbind.fill</span>(predictionsT,Regression.Predictions)</span>
+<span id="cb9-132"><a href="supervised-regression-modelling.html#cb9-132"></a></span>
+<span id="cb9-133"><a href="supervised-regression-modelling.html#cb9-133"></a>    <span class="co"># print(paste(import_num,&quot;done&quot;,sep=&quot; &quot;)</span></span>
+<span id="cb9-134"><a href="supervised-regression-modelling.html#cb9-134"></a>    }</span>
+<span id="cb9-135"><a href="supervised-regression-modelling.html#cb9-135"></a>   </span>
+<span id="cb9-136"><a href="supervised-regression-modelling.html#cb9-136"></a>   <span class="co"># Write gene importance out to file</span></span>
+<span id="cb9-137"><a href="supervised-regression-modelling.html#cb9-137"></a>   varImp.list &lt;-<span class="kw">lapply</span>(Regression.Models, <span class="cf">function</span>(L){</span>
+<span id="cb9-138"><a href="supervised-regression-modelling.html#cb9-138"></a>   importance&lt;-<span class="kw">varImp</span>(L<span class="op">$</span>MODEL)</span>
+<span id="cb9-139"><a href="supervised-regression-modelling.html#cb9-139"></a>   <span class="kw">return</span>(importance<span class="op">$</span>importance)})</span>
+<span id="cb9-140"><a href="supervised-regression-modelling.html#cb9-140"></a>   varImp.list &lt;-<span class="st"> </span><span class="kw">do.call</span>(<span class="st">&quot;cbind&quot;</span>,varImp.list)</span>
+<span id="cb9-141"><a href="supervised-regression-modelling.html#cb9-141"></a>   <span class="kw">colnames</span>(varImp.list) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">paste</span>(<span class="st">&quot;Resample.&quot;</span>,<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(<span class="kw">colnames</span>(varImp.list)),<span class="dt">sep=</span><span class="st">&quot;&quot;</span>))</span>
+<span id="cb9-142"><a href="supervised-regression-modelling.html#cb9-142"></a>   avg.varImp &lt;-<span class="st"> </span><span class="kw">rowMeans</span>(varImp.list)</span>
+<span id="cb9-143"><a href="supervised-regression-modelling.html#cb9-143"></a>   </span>
+<span id="cb9-144"><a href="supervised-regression-modelling.html#cb9-144"></a>   </span>
+<span id="cb9-145"><a href="supervised-regression-modelling.html#cb9-145"></a>   <span class="co"># Bind results for each trait used</span></span>
+<span id="cb9-146"><a href="supervised-regression-modelling.html#cb9-146"></a>   varImp.summary &lt;-<span class="st"> </span><span class="kw">cbind</span>(varImp.summary,avg.varImp)</span>
+<span id="cb9-147"><a href="supervised-regression-modelling.html#cb9-147"></a>   final.summary &lt;-<span class="st"> </span><span class="kw">rbind.fill</span>(final.summary,df)</span>
+<span id="cb9-148"><a href="supervised-regression-modelling.html#cb9-148"></a>   all.predictions &lt;-<span class="st"> </span><span class="kw">rbind.fill</span>(all.predictions,predictionsT)</span>
+<span id="cb9-149"><a href="supervised-regression-modelling.html#cb9-149"></a>   resample.summary &lt;-<span class="st"> </span><span class="kw">rbind.fill</span>(resample.summary,resamplesT)</span>
+<span id="cb9-150"><a href="supervised-regression-modelling.html#cb9-150"></a>   </span>
+<span id="cb9-151"><a href="supervised-regression-modelling.html#cb9-151"></a>   </span>
+<span id="cb9-152"><a href="supervised-regression-modelling.html#cb9-152"></a>  }</span></code></pre></div>
+<p>Clean up the results data frames and perhaps write results to file</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="supervised-regression-modelling.html#cb10-1"></a><span class="co"># remove excess</span></span>
+<span id="cb10-2"><a href="supervised-regression-modelling.html#cb10-2"></a>all.predictions &lt;-<span class="st"> </span>all.predictions[,<span class="op">-</span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)]</span>
+<span id="cb10-3"><a href="supervised-regression-modelling.html#cb10-3"></a>resample.summary &lt;-<span class="st"> </span>resample.summary[,<span class="op">-</span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)]</span>
+<span id="cb10-4"><a href="supervised-regression-modelling.html#cb10-4"></a>final.summary &lt;-<span class="st"> </span>final.summary[,<span class="op">-</span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)]</span>
+<span id="cb10-5"><a href="supervised-regression-modelling.html#cb10-5"></a>varImp.summary &lt;-<span class="st"> </span>varImp.summary[,<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb10-6"><a href="supervised-regression-modelling.html#cb10-6"></a><span class="kw">colnames</span>(varImp.summary) &lt;-<span class="st"> </span>outcomes</span>
+<span id="cb10-7"><a href="supervised-regression-modelling.html#cb10-7"></a></span>
+<span id="cb10-8"><a href="supervised-regression-modelling.html#cb10-8"></a><span class="co"># write.csv(final.summary[,-c(1:2)],file=&quot;Summary.REG.varImp.GLMNET.csv&quot;)</span></span>
+<span id="cb10-9"><a href="supervised-regression-modelling.html#cb10-9"></a><span class="co"># write.csv(all.predictions[,-1],file=&quot;PREDICTIONS.REG.varImp.GLMNET.csv&quot;)</span></span>
+<span id="cb10-10"><a href="supervised-regression-modelling.html#cb10-10"></a><span class="co"># write.csv(resample.summary,file=&quot;Resample.REG.varImp.GLMNET.csv&quot;)</span></span>
+<span id="cb10-11"><a href="supervised-regression-modelling.html#cb10-11"></a><span class="co"># write.csv(varImp.summary,file=&quot;VarImp.summary.csv&quot;)</span></span></code></pre></div>
+</div>
+<div id="examining-the-results" class="section level2">
+<h2><span class="header-section-number">1.2</span> Examining the Results</h2>
+<p>Here we depict predictions vs real values. Note all subjects are represented as we took the average prediction across all 10 test partitions.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="supervised-regression-modelling.html#cb11-1"></a><span class="co"># results for emtoional regulation</span></span>
+<span id="cb11-2"><a href="supervised-regression-modelling.html#cb11-2"></a>ok &lt;-<span class="st"> </span><span class="kw">ggscatter</span>(all.predictions <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(trait<span class="op">==</span><span class="st">&quot;REG&quot;</span>),</span>
+<span id="cb11-3"><a href="supervised-regression-modelling.html#cb11-3"></a>                <span class="dt">x=</span><span class="st">&quot;PRED&quot;</span>,</span>
+<span id="cb11-4"><a href="supervised-regression-modelling.html#cb11-4"></a>                <span class="dt">y=</span><span class="st">&quot;REAL&quot;</span>,</span>
+<span id="cb11-5"><a href="supervised-regression-modelling.html#cb11-5"></a>                <span class="dt">color=</span><span class="st">&quot;feat.num&quot;</span>,</span>
+<span id="cb11-6"><a href="supervised-regression-modelling.html#cb11-6"></a>                <span class="dt">add=</span><span class="st">&quot;reg.line&quot;</span>,</span>
+<span id="cb11-7"><a href="supervised-regression-modelling.html#cb11-7"></a>                <span class="dt">mean.point =</span> T,</span>
+<span id="cb11-8"><a href="supervised-regression-modelling.html#cb11-8"></a>                <span class="dt">title=</span><span class="st">&quot;Predicting Emotional Regulation from Placental Gene Expression&quot;</span>,</span>
+<span id="cb11-9"><a href="supervised-regression-modelling.html#cb11-9"></a>                <span class="dt">mean.point.size=</span><span class="dv">9</span>,</span>
+<span id="cb11-10"><a href="supervised-regression-modelling.html#cb11-10"></a>                <span class="dt">palette=</span><span class="st">&quot;Set2&quot;</span>,</span>
+<span id="cb11-11"><a href="supervised-regression-modelling.html#cb11-11"></a>                <span class="dt">facet.by =</span> <span class="st">&quot;feat.num&quot;</span>,</span>
+<span id="cb11-12"><a href="supervised-regression-modelling.html#cb11-12"></a>                <span class="dt">xlab=</span><span class="st">&quot;PREDICTED VALUE&quot;</span>,</span>
+<span id="cb11-13"><a href="supervised-regression-modelling.html#cb11-13"></a>                <span class="dt">ylab=</span><span class="st">&quot;REAL VALUE&quot;</span>)<span class="op">+</span></span>
+<span id="cb11-14"><a href="supervised-regression-modelling.html#cb11-14"></a><span class="st">                </span><span class="kw">stat_cor</span>(<span class="dt">method =</span> <span class="st">&quot;pearson&quot;</span>,<span class="dt">show.legend =</span> F)<span class="op">+</span></span>
+<span id="cb11-15"><a href="supervised-regression-modelling.html#cb11-15"></a><span class="st">                </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>))</span>
+<span id="cb11-16"><a href="supervised-regression-modelling.html#cb11-16"></a></span>
+<span id="cb11-17"><a href="supervised-regression-modelling.html#cb11-17"></a>ok &lt;-<span class="st"> </span><span class="kw">ggpar</span>(ok,<span class="dt">legend.title=</span> <span class="st">&quot;Number of Important Features&quot;</span>,<span class="dt">legend=</span><span class="st">&quot;bottom&quot;</span>)</span>
+<span id="cb11-18"><a href="supervised-regression-modelling.html#cb11-18"></a>ok</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="01-ML_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>The same thing here, just using gganimate</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="supervised-regression-modelling.html#cb13-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(all.predictions <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(trait<span class="op">==</span><span class="st">&quot;REG&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>PRED, <span class="dt">y=</span>REAL)) <span class="op">+</span></span>
+<span id="cb13-2"><a href="supervised-regression-modelling.html#cb13-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.7</span>, <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
+<span id="cb13-3"><a href="supervised-regression-modelling.html#cb13-3"></a><span class="st">  </span></span>
+<span id="cb13-4"><a href="supervised-regression-modelling.html#cb13-4"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&#39;lm&#39;</span>, <span class="dt">formula=</span> y<span class="op">~</span>x)<span class="op">+</span></span>
+<span id="cb13-5"><a href="supervised-regression-modelling.html#cb13-5"></a><span class="st">   </span><span class="kw">stat_smooth_func</span>(<span class="dt">geom=</span><span class="st">&quot;text&quot;</span>,<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>,<span class="dt">hjust=</span><span class="dv">0</span>,<span class="dt">parse=</span><span class="ot">TRUE</span>)<span class="op">+</span></span>
+<span id="cb13-6"><a href="supervised-regression-modelling.html#cb13-6"></a><span class="st"> </span><span class="co"># stat_regline_equation()+</span></span>
+<span id="cb13-7"><a href="supervised-regression-modelling.html#cb13-7"></a><span class="st">  </span><span class="co">#scale_colour_manual(values = country_colors) +</span></span>
+<span id="cb13-8"><a href="supervised-regression-modelling.html#cb13-8"></a><span class="st">  </span><span class="co">#scale_size(range = c(2, 12)) +</span></span>
+<span id="cb13-9"><a href="supervised-regression-modelling.html#cb13-9"></a><span class="st">  </span><span class="co">#scale_x_log10() +</span></span>
+<span id="cb13-10"><a href="supervised-regression-modelling.html#cb13-10"></a><span class="st">  </span><span class="co">#facet_wrap(~continent) +</span></span>
+<span id="cb13-11"><a href="supervised-regression-modelling.html#cb13-11"></a><span class="st">  </span><span class="co"># Here comes the gganimate specific bits</span></span>
+<span id="cb13-12"><a href="supervised-regression-modelling.html#cb13-12"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Child Emotional Regulation&quot;</span>,<span class="dt">subtitle =</span> <span class="st">&quot;Number of Features: {closest_state}&quot;</span>, <span class="dt">x =</span> <span class="st">&#39;PREDICTED&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;REAL&#39;</span>) <span class="op">+</span></span>
+<span id="cb13-13"><a href="supervised-regression-modelling.html#cb13-13"></a><span class="st">  </span><span class="kw">transition_states</span>(feat.num) <span class="op">+</span></span>
+<span id="cb13-14"><a href="supervised-regression-modelling.html#cb13-14"></a><span class="st">   </span><span class="kw">theme</span>(</span>
+<span id="cb13-15"><a href="supervised-regression-modelling.html#cb13-15"></a>  <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">face=</span><span class="st">&quot;bold&quot;</span>)</span>
+<span id="cb13-16"><a href="supervised-regression-modelling.html#cb13-16"></a>)</span>
+<span id="cb13-17"><a href="supervised-regression-modelling.html#cb13-17"></a></span>
+<span id="cb13-18"><a href="supervised-regression-modelling.html#cb13-18"></a><span class="kw">animate</span>(p, <span class="dt">duration =</span> <span class="dv">5</span>, <span class="dt">fps =</span> <span class="dv">50</span>, <span class="dt">width =</span> <span class="dv">500</span>, <span class="dt">height =</span> <span class="dv">500</span>, <span class="dt">renderer =</span> <span class="kw">gifski_renderer</span>())</span></code></pre></div>
+<p><img src="01-ML_files/figure-html/unnamed-chunk-7-1.gif" /><!-- --></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="supervised-regression-modelling.html#cb14-1"></a><span class="co">#anim_save(&quot;output.gif&quot;)</span></span></code></pre></div>
+<p>RMSE (Root Mean Square Error) is used to evaluate test performance. This tells you the average difference between the real and predicted values (i.e,
+the residual).</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="supervised-regression-modelling.html#cb15-1"></a>resample.stat &lt;-<span class="st"> </span>resample.summary <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(trait<span class="op">==</span><span class="st">&quot;REG&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(var.num) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(</span>
+<span id="cb15-2"><a href="supervised-regression-modelling.html#cb15-2"></a>   <span class="dt">mean=</span><span class="kw">mean</span>(RMSE),</span>
+<span id="cb15-3"><a href="supervised-regression-modelling.html#cb15-3"></a>   <span class="dt">se=</span><span class="kw">sd</span>(RMSE)<span class="op">/</span><span class="kw">sqrt</span>(<span class="kw">n</span>()))</span>
+<span id="cb15-4"><a href="supervised-regression-modelling.html#cb15-4"></a></span>
+<span id="cb15-5"><a href="supervised-regression-modelling.html#cb15-5"></a><span class="kw">ggplot</span>(resample.stat,<span class="kw">aes</span>(<span class="dt">x=</span>var.num,<span class="dt">y=</span>mean))<span class="op">+</span></span>
+<span id="cb15-6"><a href="supervised-regression-modelling.html#cb15-6"></a><span class="st">   </span><span class="kw">geom_line</span>(<span class="dt">color=</span><span class="st">&quot;black&quot;</span>,<span class="dt">size=</span><span class="dv">1</span>)<span class="op">+</span></span>
+<span id="cb15-7"><a href="supervised-regression-modelling.html#cb15-7"></a><span class="st">   </span><span class="kw">geom_point</span>(<span class="dt">color=</span><span class="st">&quot;red&quot;</span>,<span class="dt">size=</span><span class="dv">5</span>)<span class="op">+</span></span>
+<span id="cb15-8"><a href="supervised-regression-modelling.html#cb15-8"></a><span class="st">   </span><span class="kw">geom_errorbar</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> mean <span class="op">-</span><span class="st"> </span>se, <span class="dt">ymax =</span> mean <span class="op">+</span><span class="st"> </span>se), <span class="dt">color=</span><span class="st">&quot;red&quot;</span>,<span class="dt">width=</span><span class="dv">300</span>,<span class="dt">size=</span><span class="dv">1</span>)<span class="op">+</span></span>
+<span id="cb15-9"><a href="supervised-regression-modelling.html#cb15-9"></a><span class="st">   </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Emotional Regulation: Test Performance&quot;</span>, <span class="dt">x =</span> <span class="st">&#39;Features&#39;</span>, <span class="dt">y =</span> <span class="st">&#39;Mean RMSE&#39;</span>,<span class="dt">hjust=</span><span class="fl">0.5</span>)<span class="op">+</span></span>
+<span id="cb15-10"><a href="supervised-regression-modelling.html#cb15-10"></a><span class="st">   </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">100</span>,<span class="dv">1000</span>,<span class="dv">5000</span>))<span class="op">+</span></span>
+<span id="cb15-11"><a href="supervised-regression-modelling.html#cb15-11"></a><span class="st">   </span><span class="kw">ylim</span>(<span class="fl">0.5</span>,.<span class="dv">75</span>)<span class="op">+</span></span>
+<span id="cb15-12"><a href="supervised-regression-modelling.html#cb15-12"></a><span class="st">   </span><span class="kw">theme</span>(<span class="dt">plot.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">18</span>,<span class="dt">face=</span><span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb15-13"><a href="supervised-regression-modelling.html#cb15-13"></a>        <span class="dt">axis.title=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">14</span>,<span class="dt">face=</span><span class="st">&quot;bold&quot;</span>),</span>
+<span id="cb15-14"><a href="supervised-regression-modelling.html#cb15-14"></a>        <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>),</span>
+<span id="cb15-15"><a href="supervised-regression-modelling.html#cb15-15"></a>        <span class="dt">axis.text.y=</span><span class="kw">element_text</span>(<span class="dt">size=</span><span class="dv">12</span>))</span></code></pre></div>
+<p><img src="01-ML_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Showing how RMSE changed with each resampling test partition</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="supervised-regression-modelling.html#cb16-1"></a>resample.summary<span class="op">$</span>ID &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,<span class="dt">times=</span><span class="dv">6</span>,<span class="dt">each=</span><span class="dv">1</span>)</span>
+<span id="cb16-2"><a href="supervised-regression-modelling.html#cb16-2"></a></span>
+<span id="cb16-3"><a href="supervised-regression-modelling.html#cb16-3"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(resample.summary <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(trait<span class="op">==</span><span class="st">&quot;REG&quot;</span>), <span class="kw">aes</span>(<span class="dt">x=</span>ID, <span class="dt">y=</span>RMSE,<span class="dt">group=</span><span class="kw">as.factor</span>(var.num),<span class="dt">color=</span><span class="kw">as.factor</span>(var.num))) <span class="op">+</span></span>
+<span id="cb16-4"><a href="supervised-regression-modelling.html#cb16-4"></a><span class="st">     </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
+<span id="cb16-5"><a href="supervised-regression-modelling.html#cb16-5"></a><span class="st">     </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.7</span>, <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
+<span id="cb16-6"><a href="supervised-regression-modelling.html#cb16-6"></a><span class="st">     </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>))<span class="op">+</span></span>
+<span id="cb16-7"><a href="supervised-regression-modelling.html#cb16-7"></a><span class="st">     </span><span class="kw">scale_color_discrete</span>(<span class="dt">name=</span><span class="st">&quot;Number of Impotant Features&quot;</span>)<span class="op">+</span></span>
+<span id="cb16-8"><a href="supervised-regression-modelling.html#cb16-8"></a><span class="st">     </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Resample number&quot;</span>,<span class="dt">y=</span><span class="st">&quot;RMSE&quot;</span>,<span class="dt">title=</span><span class="st">&quot;Emotional Regulation:Test Performance&quot;</span>)<span class="op">+</span></span>
+<span id="cb16-9"><a href="supervised-regression-modelling.html#cb16-9"></a><span class="st">     </span><span class="kw">transition_reveal</span>(ID) <span class="op">+</span></span>
+<span id="cb16-10"><a href="supervised-regression-modelling.html#cb16-10"></a><span class="st">     </span><span class="kw">theme</span>(</span>
+<span id="cb16-11"><a href="supervised-regression-modelling.html#cb16-11"></a>     <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">face=</span><span class="st">&quot;bold&quot;</span>)</span>
+<span id="cb16-12"><a href="supervised-regression-modelling.html#cb16-12"></a>     )</span>
+<span id="cb16-13"><a href="supervised-regression-modelling.html#cb16-13"></a></span>
+<span id="cb16-14"><a href="supervised-regression-modelling.html#cb16-14"></a><span class="kw">animate</span>(p, <span class="dt">duration =</span> <span class="dv">8</span>, <span class="dt">fps =</span> <span class="dv">50</span>, <span class="dt">width =</span> <span class="dv">700</span>, <span class="dt">height =</span> <span class="dv">500</span>, <span class="dt">renderer =</span> <span class="kw">gifski_renderer</span>(),<span class="dt">end_pause =</span> <span class="dv">100</span>)</span></code></pre></div>
+<p><img src="01-ML_files/figure-html/unnamed-chunk-9-1.gif" /><!-- --></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="supervised-regression-modelling.html#cb17-1"></a><span class="co">#anim_save(&quot;output.gif&quot;)</span></span></code></pre></div>
+<p>Taking a look at most important variables for each trait</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="supervised-regression-modelling.html#cb18-1"></a><span class="co">## Sort by highest importance to lowest</span></span>
+<span id="cb18-2"><a href="supervised-regression-modelling.html#cb18-2"></a><span class="co">#m &lt;- varImp.summary %&gt;% arrange(desc(REG))</span></span>
+<span id="cb18-3"><a href="supervised-regression-modelling.html#cb18-3"></a><span class="co">#ggplot(aes(x=`car name`, y=mpg_z, label=mpg_z)) +</span></span>
+<span id="cb18-4"><a href="supervised-regression-modelling.html#cb18-4"></a><span class="co">#geom_bar(stat=&#39;identity&#39;, aes(fill=mpg_type), width=.5)  +</span></span>
+<span id="cb18-5"><a href="supervised-regression-modelling.html#cb18-5"></a><span class="co">#  scale_fill_manual(name=&quot;Mileage&quot;, </span></span>
+<span id="cb18-6"><a href="supervised-regression-modelling.html#cb18-6"></a> <span class="co">#                   labels = c(&quot;Above Average&quot;, &quot;Below Average&quot;), </span></span>
+<span id="cb18-7"><a href="supervised-regression-modelling.html#cb18-7"></a>  <span class="co">#                  values = c(&quot;above&quot;=&quot;#00ba38&quot;, &quot;below&quot;=&quot;#f8766d&quot;)) + </span></span>
+<span id="cb18-8"><a href="supervised-regression-modelling.html#cb18-8"></a>  <span class="co">#labs(subtitle=&quot;Normalised mileage from &#39;mtcars&#39;&quot;, </span></span>
+<span id="cb18-9"><a href="supervised-regression-modelling.html#cb18-9"></a><span class="co">#       title= &quot;Diverging Bars&quot;) + </span></span>
+<span id="cb18-10"><a href="supervised-regression-modelling.html#cb18-10"></a><span class="co">#  coord_flip()</span></span></code></pre></div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
