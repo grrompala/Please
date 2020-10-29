@@ -368,3 +368,25 @@ Taking a look at most important variables for each trait
 ```
 
 
+Show test predictions for every subject: You can see the predictions are quite conservative 
+```{r}
+DF <- all.predictions %>% filter(trait=="REG" & feat.num==5000) %>% arrange(REAL) %>% mutate(Order=1:nrow(.))
+ONE <- DF %>% select(PRED,SampleID,Order) %>% mutate(LABEL="PREDICTION")
+TWO <- DF %>% select(REAL,SampleID,Order) %>% mutate(LABEL="REAL VALUE")
+
+colnames(TWO)[1] <- "PRED"
+all.pred <- rbind(ONE,TWO)
+
+p <- ggplot(all.pred %>% filter(trait=="REG"), aes(x=PRED, y=reorder(SampleID,Order),color=LABEL)) +
+  geom_point(alpha = 0.7,size=3)+
+  labs(title="Predicting Child Emotional Regulation", x = 'Emotional Regulation Score', y = 'Subjects') +
+  scale_color_manual(values=c("#FF0000","#0000FF"),)+  
+  #scale_x_continuous(labels=)
+  theme(
+  plot.title = element_text(face="bold"),
+  axis.text.x = element_text(size=12),
+  axis.text.y = element_text(size=6),
+  axis.title.x=element_text(face="bold"),
+  axis.title.y=element_text(face="bold"))
+
+```
