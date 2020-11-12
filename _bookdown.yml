@@ -2,6 +2,6 @@ book_filename: "Machine-Learning-Caret"
 chapter_name: "Chapter "
 repo: https://github.com/seankross/bookdown-start
 output_dir: docs
-rmd_files: ["index.Rmd", "01-ML.Rmd"]
+rmd_files: ["index.Rmd", "01-ML.Rmd","02-MultiTask.Rmd"]
 clean: [packages.bib, bookdown.bbl]
 new_session: yes

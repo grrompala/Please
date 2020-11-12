@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Multitask mvtboost for predicting multiple behaviors from placental transcriptome – | ML Guide</title>
+  <meta name="description" content="Guide to using caret for supervised regression modelling in R with data visualization" />
+  <meta name="generator" content="bookdown 0.20.6 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Multitask mvtboost for predicting multiple behaviors from placental transcriptome – | ML Guide" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Guide to using caret for supervised regression modelling in R with data visualization" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Multitask mvtboost for predicting multiple behaviors from placental transcriptome – | ML Guide" />
+  
+  <meta name="twitter:description" content="Guide to using caret for supervised regression modelling in R with data visualization" />
+  
+
+<meta name="author" content="Greg Rompala" />
+
+
+<meta name="date" content="2020-10-22" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="supervised-regression-modelling.html"/>
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">ML Regression Modelling</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="supervised-regression-modelling.html"><a href="supervised-regression-modelling.html"><i class="fa fa-check"></i><b>1</b> Supervised Regression Modelling</a><ul>
+<li class="chapter" data-level="1.1" data-path="supervised-regression-modelling.html"><a href="supervised-regression-modelling.html#training-and-testing"><i class="fa fa-check"></i><b>1.1</b> Training and Testing</a></li>
+<li class="chapter" data-level="1.2" data-path="supervised-regression-modelling.html"><a href="supervised-regression-modelling.html#examining-the-results"><i class="fa fa-check"></i><b>1.2</b> Examining the Results</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html"><i class="fa fa-check"></i><b>2</b> Multitask mvtboost for predicting multiple behaviors from placental transcriptome –</a><ul>
+<li class="chapter" data-level="2.1" data-path="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#compare-best-alpha-across-train-test-partitions"><i class="fa fa-check"></i><b>2.1</b> compare best alpha across train-test partitions</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">ML Guide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome" class="section level1">
+<h1><span class="header-section-number">Chapter 2</span> Multitask mvtboost for predicting multiple behaviors from placental transcriptome –</h1>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb20-1"></a><span class="kw">suppressPackageStartupMessages</span>({</span>
+<span id="cb20-2"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb20-2"></a><span class="kw">library</span>(glmnet)  <span class="co"># Loads glmnet package</span></span>
+<span id="cb20-3"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb20-3"></a><span class="kw">library</span>(caret)</span>
+<span id="cb20-4"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb20-4"></a><span class="kw">library</span>(plyr)</span>
+<span id="cb20-5"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb20-5"></a><span class="kw">library</span>(gganimate)</span>
+<span id="cb20-6"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb20-6"></a><span class="kw">library</span>(gapminder)</span>
+<span id="cb20-7"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb20-7"></a><span class="kw">library</span>(cowplot)</span>
+<span id="cb20-8"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb20-8"></a><span class="kw">library</span>(directlabels)</span>
+<span id="cb20-9"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb20-9"></a><span class="kw">library</span>(gifski)</span>
+<span id="cb20-10"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb20-10"></a><span class="kw">library</span>(transformr)</span>
+<span id="cb20-11"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb20-11"></a><span class="kw">library</span>(RUncommon)</span>
+<span id="cb20-12"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb20-12"></a><span class="kw">library</span>(tidyr)</span>
+<span id="cb20-13"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb20-13"></a><span class="kw">library</span>(broom)</span>
+<span id="cb20-14"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb20-14"></a>})</span></code></pre></div>
+<pre><code>## Warning: package &#39;transformr&#39; was built under R version 4.0.3</code></pre>
+<pre><code>## Warning: package &#39;broom&#39; was built under R version 4.0.3</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb23-1"></a><span class="co">#working.dir=&quot;C:/Users/grrompala/Desktop&quot;  # working directory</span></span>
+<span id="cb23-2"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb23-2"></a><span class="co">#setwd(working.dir)</span></span>
+<span id="cb23-3"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb23-3"></a></span>
+<span id="cb23-4"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb23-4"></a><span class="co">## Import counts and metadata as matrix [make sure there are no NAs]</span></span>
+<span id="cb23-5"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb23-5"></a>counts &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;counts.csv&quot;</span>,<span class="dt">header=</span>T,<span class="dt">row.names=</span><span class="dv">1</span>)</span>
+<span id="cb23-6"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb23-6"></a>meta &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">read.csv</span>(<span class="st">&quot;meta.csv&quot;</span>,<span class="dt">header=</span>T,<span class="dt">row.names=</span><span class="dv">1</span>))</span>
+<span id="cb23-7"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb23-7"></a>counts &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">t</span>(counts[,<span class="kw">rownames</span>(meta)]))</span></code></pre></div>
+<p>Set seed for reproducibility</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb24-1"></a><span class="kw">set.seed</span>(<span class="dv">777</span>)</span></code></pre></div>
+<p>Determine Training and Test Sets: making 3 training:test partitions here</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb25-1"></a>Y.cont &lt;-<span class="st"> </span>meta[,<span class="dv">1</span>]  <span class="co"># replace with variable of choice </span></span>
+<span id="cb25-2"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb25-2"></a><span class="kw">names</span>(Y.cont) &lt;-<span class="st"> </span><span class="kw">rownames</span>(meta)</span>
+<span id="cb25-3"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb25-3"></a>train.parts &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(Y.cont,<span class="dt">p=</span>.<span class="dv">8</span>,<span class="dt">list=</span><span class="ot">TRUE</span>,<span class="dt">times=</span><span class="dv">3</span>)</span></code></pre></div>
+<p>Cross-validation training</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-1"></a><span class="kw">options</span>(<span class="dt">width =</span> <span class="dv">60</span>)</span>
+<span id="cb26-2"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-2"></a></span>
+<span id="cb26-3"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-3"></a>out &lt;-<span class="st"> </span><span class="kw">lapply</span>(train.parts,<span class="cf">function</span>(L){</span>
+<span id="cb26-4"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-4"></a>       </span>
+<span id="cb26-5"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-5"></a></span>
+<span id="cb26-6"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-6"></a></span>
+<span id="cb26-7"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-7"></a></span>
+<span id="cb26-8"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-8"></a></span>
+<span id="cb26-9"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-9"></a></span>
+<span id="cb26-10"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-10"></a></span>
+<span id="cb26-11"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-11"></a></span>
+<span id="cb26-12"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-12"></a></span>
+<span id="cb26-13"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-13"></a><span class="co">## Cross-validation training</span></span>
+<span id="cb26-14"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-14"></a></span>
+<span id="cb26-15"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-15"></a>list.of.fits &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb26-16"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-16"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">0</span><span class="op">:</span><span class="dv">10</span>) {</span>
+<span id="cb26-17"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-17"></a>  <span class="co">## Here&#39;s what&#39;s going on in this loop...</span></span>
+<span id="cb26-18"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-18"></a>  <span class="co">## We are testing alpha = i/10. This means we are testing</span></span>
+<span id="cb26-19"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-19"></a>  <span class="co">## alpha = 0/10 = 0 on the first iteration, alpha = 1/10 = 0.1 on</span></span>
+<span id="cb26-20"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-20"></a>  <span class="co">## the second iteration etc.</span></span>
+<span id="cb26-21"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-21"></a>  </span>
+<span id="cb26-22"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-22"></a>  <span class="co">## First, make a variable name that we can use later to refer</span></span>
+<span id="cb26-23"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-23"></a>  <span class="co">## to the model optimized for a specific alpha.</span></span>
+<span id="cb26-24"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-24"></a>  <span class="co">## For example, when alpha = 0, we will be able to refer to </span></span>
+<span id="cb26-25"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-25"></a>  <span class="co">## that model with the variable name &quot;alpha0&quot;.</span></span>
+<span id="cb26-26"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-26"></a>  fit.name &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;alpha&quot;</span>, i<span class="op">/</span><span class="dv">10</span>)</span>
+<span id="cb26-27"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-27"></a>  </span>
+<span id="cb26-28"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-28"></a>  <span class="co">## Now fit a model (i.e. optimize lambda) and store it in a list that </span></span>
+<span id="cb26-29"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-29"></a>  <span class="co">## uses the variable name we just created as the reference.</span></span>
+<span id="cb26-30"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-30"></a>  list.of.fits[[fit.name]] &lt;-</span>
+<span id="cb26-31"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-31"></a><span class="st">    </span><span class="kw">cv.glmnet</span>(counts[L,], meta[L,],<span class="dt">nfolds=</span><span class="dv">10</span>, <span class="dt">type.measure=</span><span class="st">&quot;mse&quot;</span>, <span class="dt">alpha=</span>i<span class="op">/</span><span class="dv">10</span>, <span class="dt">family=</span><span class="st">&quot;mgaussian&quot;</span>)</span>
+<span id="cb26-32"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-32"></a>}</span>
+<span id="cb26-33"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-33"></a><span class="kw">return</span>(<span class="kw">list</span>(<span class="dt">FITS=</span>list.of.fits))</span>
+<span id="cb26-34"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb26-34"></a>})</span></code></pre></div>
+<div id="compare-best-alpha-across-train-test-partitions" class="section level2">
+<h2><span class="header-section-number">2.1</span> compare best alpha across train-test partitions</h2>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb27-1"></a>new &lt;-<span class="st"> </span><span class="kw">lapply</span>(out,<span class="cf">function</span>(L){</span>
+<span id="cb27-2"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb27-2"></a> lambda.min &lt;-<span class="st"> </span><span class="kw">vector</span>()</span>
+<span id="cb27-3"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb27-3"></a> <span class="cf">for</span>(x <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">11</span>){</span>
+<span id="cb27-4"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb27-4"></a> x&lt;-<span class="st"> </span>L<span class="op">$</span>FITS[[x]]<span class="op">$</span>lambda.min</span>
+<span id="cb27-5"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb27-5"></a> lambda.min &lt;-<span class="st"> </span><span class="kw">append</span>(lambda.min,x)</span>
+<span id="cb27-6"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb27-6"></a> }</span>
+<span id="cb27-7"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb27-7"></a> <span class="kw">return</span>(lambda.min)</span>
+<span id="cb27-8"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb27-8"></a></span>
+<span id="cb27-9"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb27-9"></a>  })</span>
+<span id="cb27-10"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb27-10"></a></span>
+<span id="cb27-11"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb27-11"></a><span class="co"># Final lambda.se</span></span>
+<span id="cb27-12"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb27-12"></a>NAMES &lt;-<span class="st"> </span><span class="kw">names</span>(out<span class="op">$</span>Resample1<span class="op">$</span>FITS)</span>
+<span id="cb27-13"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb27-13"></a>lambda &lt;-<span class="st"> </span><span class="kw">ldply</span>(new,rbind)</span>
+<span id="cb27-14"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb27-14"></a><span class="kw">colnames</span>(lambda)[<span class="dv">2</span><span class="op">:</span><span class="dv">12</span>] &lt;-<span class="st"> </span>NAMES</span></code></pre></div>
+<p>Inspect the minimum lambda values for each alpha.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-1"></a><span class="co">#resample.summary$ID &lt;- rep(1:10,times=6,each=1)</span></span>
+<span id="cb28-2"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-2"></a></span>
+<span id="cb28-3"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-3"></a>LAMBDA &lt;-<span class="st"> </span><span class="kw">gather</span>(lambda,<span class="dt">key=</span><span class="st">&quot;Alpha&quot;</span>,<span class="dt">value =</span><span class="st">&quot;Lambda&quot;</span>,<span class="op">-</span>.id )</span>
+<span id="cb28-4"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-4"></a>LAMBDA<span class="op">$</span>Alpha &lt;-<span class="st"> </span>stringr<span class="op">::</span><span class="kw">str_replace_all</span>(LAMBDA<span class="op">$</span>Alpha,<span class="st">&quot;alpha&quot;</span>,<span class="st">&quot;&quot;</span>)</span>
+<span id="cb28-5"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-5"></a>LAMBDA<span class="op">$</span>Alpha &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(LAMBDA<span class="op">$</span>Alpha)</span>
+<span id="cb28-6"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-6"></a></span>
+<span id="cb28-7"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-7"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(LAMBDA, <span class="kw">aes</span>(<span class="dt">x=</span>Alpha, <span class="dt">y=</span>Lambda,<span class="dt">group=</span><span class="kw">as.factor</span>(.id),<span class="dt">color=</span><span class="kw">as.factor</span>(.id))) <span class="op">+</span></span>
+<span id="cb28-8"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-8"></a><span class="st">     </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
+<span id="cb28-9"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-9"></a><span class="st">     </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.7</span>, <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
+<span id="cb28-10"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-10"></a><span class="st">    </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks=</span><span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dt">by=</span><span class="fl">0.1</span>))<span class="op">+</span></span>
+<span id="cb28-11"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-11"></a><span class="st">     </span><span class="kw">ylim</span>(<span class="dv">0</span>,<span class="dv">40</span>)<span class="op">+</span></span>
+<span id="cb28-12"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-12"></a><span class="st">     </span><span class="kw">scale_color_discrete</span>(<span class="dt">name=</span><span class="st">&quot;Comparing Best Lambda&quot;</span>)<span class="op">+</span></span>
+<span id="cb28-13"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-13"></a><span class="st">     </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Alpha value&quot;</span>,<span class="dt">y=</span><span class="st">&quot;Lambda.min&quot;</span>,<span class="dt">title=</span><span class="st">&quot;Best Lambda&quot;</span>)<span class="op">+</span></span>
+<span id="cb28-14"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-14"></a><span class="st">    </span><span class="co"># transition_reveal(Alpha) +     ## If you want to animate</span></span>
+<span id="cb28-15"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-15"></a><span class="st">     </span><span class="kw">theme</span>(</span>
+<span id="cb28-16"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-16"></a>     <span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">face=</span><span class="st">&quot;bold&quot;</span>)</span>
+<span id="cb28-17"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-17"></a>     )</span>
+<span id="cb28-18"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-18"></a><span class="co"># If you want to animate</span></span>
+<span id="cb28-19"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-19"></a><span class="co">#animate(p, duration = 8, fps = 50, width = 700, height = 500, renderer = gifski_renderer(),end_pause = 100)</span></span>
+<span id="cb28-20"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb28-20"></a>p</span></code></pre></div>
+<pre><code>## Warning: Removed 4 row(s) containing missing values
+## (geom_path).</code></pre>
+<pre><code>## Warning: Removed 4 rows containing missing values
+## (geom_point).</code></pre>
+<p><img src="02-MultiTask_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Now we see which alpha (0, 0.1, … , 0.9, 1) does the best job predicting the values in the Testing dataset.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-1"></a>results &lt;-<span class="st"> </span><span class="kw">data.frame</span>()</span>
+<span id="cb31-2"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-2"></a>predicted &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb31-3"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-3"></a>ticker &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb31-4"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-4"></a></span>
+<span id="cb31-5"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-5"></a>mine &lt;-<span class="st"> </span><span class="kw">lapply</span>(out,<span class="cf">function</span>(L){</span>
+<span id="cb31-6"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-6"></a>  </span>
+<span id="cb31-7"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-7"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">0</span><span class="op">:</span><span class="dv">10</span>) {</span>
+<span id="cb31-8"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-8"></a>  fit.name &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;alpha&quot;</span>, i<span class="op">/</span><span class="dv">10</span>)</span>
+<span id="cb31-9"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-9"></a>  x &lt;-<span class="st"> </span>train.parts[[ticker]]</span>
+<span id="cb31-10"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-10"></a>  <span class="co">## Use each model to predict &#39;y&#39; given the Testing dataset</span></span>
+<span id="cb31-11"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-11"></a>  predicted[[fit.name]] &lt;-<span class="st"> </span><span class="kw">predict</span>(L<span class="op">$</span>FITS[[fit.name]], <span class="dt">s=</span>L<span class="op">$</span>FITS[[fit.name]]<span class="op">$</span>lambda.min,<span class="dt">newx=</span>counts[<span class="op">-</span>x,]) <span class="co"># lamda.1se gives me same values for all)</span></span>
+<span id="cb31-12"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-12"></a>  dat.ANX &lt;-<span class="st"> </span><span class="kw">data.frame</span>(predicted[[fit.name]])[,<span class="dv">1</span>]</span>
+<span id="cb31-13"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-13"></a>  dat.REG &lt;-<span class="st"> </span><span class="kw">data.frame</span>(predicted[[fit.name]])[,<span class="dv">2</span>]</span>
+<span id="cb31-14"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-14"></a>  <span class="co">## Calculate the Mean Squared Error...</span></span>
+<span id="cb31-15"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-15"></a>  mse.ANX &lt;-<span class="st"> </span><span class="kw">mean</span>((meta[<span class="op">-</span>x,<span class="dv">1</span>]<span class="op">-</span>dat.ANX)<span class="op">^</span><span class="dv">2</span>)</span>
+<span id="cb31-16"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-16"></a>  cor.ANX &lt;-<span class="st"> </span><span class="kw">cor</span>(meta[<span class="op">-</span>x,<span class="dv">1</span>],dat.ANX)</span>
+<span id="cb31-17"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-17"></a>  mse.REG &lt;-<span class="st"> </span><span class="kw">mean</span>((meta[<span class="op">-</span>x,<span class="dv">2</span>]<span class="op">-</span>dat.REG)<span class="op">^</span><span class="dv">2</span>)</span>
+<span id="cb31-18"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-18"></a>  cor.REG &lt;-<span class="st"> </span><span class="kw">cor</span>(meta[<span class="op">-</span>x,<span class="dv">2</span>],dat.REG)</span>
+<span id="cb31-19"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-19"></a>  <span class="co">## Store the results</span></span>
+<span id="cb31-20"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-20"></a>  temp &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">alpha=</span>i<span class="op">/</span><span class="dv">10</span>, <span class="dt">mse.ANX=</span>mse.ANX,<span class="dt">mse.REG=</span>mse.REG,<span class="dt">cor.ANX=</span>cor.ANX,<span class="dt">cor.REG=</span>cor.REG)</span>
+<span id="cb31-21"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-21"></a>  results &lt;-<span class="st"> </span><span class="kw">rbind</span>(results, temp)</span>
+<span id="cb31-22"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-22"></a>}</span>
+<span id="cb31-23"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-23"></a>ticker &lt;-<span class="st"> </span>ticker<span class="op">+</span><span class="dv">1</span></span>
+<span id="cb31-24"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-24"></a>results</span>
+<span id="cb31-25"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-25"></a>})</span>
+<span id="cb31-26"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb31-26"></a>mine</span></code></pre></div>
+<pre><code>## $Resample1
+##    alpha  mse.ANX   mse.REG      cor.ANX      cor.REG
+## 1    0.0 157.8251 0.2165756  0.040650580  0.341055253
+## 2    0.1 153.6521 0.3739259  0.176143832 -0.017137171
+## 3    0.2 151.7553 0.2571316  0.004829493 -0.139928415
+## 4    0.3 148.8318 0.2534180 -0.009199660 -0.167371783
+## 5    0.4 152.2548 0.2593742 -0.006625847 -0.170220235
+## 6    0.5 150.7424 0.2548932 -0.005101073 -0.111918250
+## 7    0.6 148.4390 0.2512730  0.020025030 -0.073011263
+## 8    0.7 148.4599 0.2505917  0.027812628 -0.040937734
+## 9    0.8 146.5394 0.2485602  0.067237517 -0.004105224
+## 10   0.9 156.2203 0.2510810  0.054945504  0.053600964
+## 11   1.0 146.8357 0.2460869           NA           NA
+## 
+## $Resample2
+##    alpha   mse.ANX   mse.REG   cor.ANX      cor.REG
+## 1    0.0 139.71511 0.2060069 0.3788515  0.497241026
+## 2    0.1 144.66249 0.2411485 0.4993212 -0.210051029
+## 3    0.2 123.97687 0.2395855 0.6204862  0.043585700
+## 4    0.3 146.75561 0.2400418        NA           NA
+## 5    0.4 131.06258 0.2442514 0.5634437 -0.086731526
+## 6    0.5 122.11802 0.2427125 0.6148530  0.001088167
+## 7    0.6  95.37157 0.2297153 0.7142508  0.212751398
+## 8    0.7 113.52932 0.2400026 0.6381474  0.089176697
+## 9    0.8  86.45743 0.2252484 0.7253725  0.262772761
+## 10   0.9  76.54971 0.2177523 0.7449105  0.321737577
+## 11   1.0  83.71461 0.2146711 0.7261630  0.352089566
+## 
+## $Resample3
+##    alpha   mse.ANX   mse.REG   cor.ANX      cor.REG
+## 1    0.0 104.23937 0.1433687 0.6443336  0.677447286
+## 2    0.1 146.95428 0.2432270        NA           NA
+## 3    0.2  68.67570 0.2006735 0.8475218  0.494744890
+## 4    0.3 146.95428 0.2432270        NA           NA
+## 5    0.4 146.95428 0.2432270        NA           NA
+## 6    0.5 105.43017 0.2409735 0.7432870  0.086508980
+## 7    0.6 110.14788 0.2435018 0.7353679  0.016053736
+## 8    0.7 106.83652 0.2443347 0.7481970  0.002752367
+## 9    0.8 146.95428 0.2432270        NA           NA
+## 10   0.9 100.26308 0.2478571 0.7596765 -0.047267614
+## 11   1.0  91.84076 0.2523996 0.7597162 -0.090806251</code></pre>
+<p>Get top coefficients</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb33-1"></a>bb &lt;-<span class="st"> </span><span class="kw">coef</span>(out<span class="op">$</span>Resample1<span class="op">$</span>FITS<span class="op">$</span>alpha0<span class="fl">.1</span>,<span class="dt">s=</span>out<span class="op">$</span>Resample1<span class="op">$</span>FITS<span class="op">$</span>alpha0<span class="fl">.1</span><span class="op">$</span>lambda.min)</span>
+<span id="cb33-2"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb33-2"></a>ANX.COEF &lt;-<span class="st"> </span><span class="kw">tidy</span>(bb<span class="op">$</span>STAI_TTO)</span>
+<span id="cb33-3"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb33-3"></a>REG.COEF &lt;-<span class="st"> </span><span class="kw">tidy</span>(bb<span class="op">$</span>REG)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb34-1"></a><span class="co">#Top positive coefficients</span></span>
+<span id="cb34-2"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb34-2"></a>REG.COEF <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(value)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dt">n=</span><span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##            row column       value
+## 1  (Intercept)      1 5.290904793
+## 2      FAM71E1      1 0.003913448
+## 3  SLC12A9-AS1      1 0.003758733
+## 4        SMC1B      1 0.003063004
+## 5       RAB33A      1 0.002953823
+## 6       SMG1P6      1 0.002689962
+## 7         TTC4      1 0.002635864
+## 8     RN7SKP80      1 0.002518529
+## 9        HCG25      1 0.002492880
+## 10    SMC5-AS1      1 0.002382001</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb36-1"></a>ANX.COEF <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(value)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dt">n=</span><span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##               row column       value
+## 1     (Intercept)      1 23.74961672
+## 2     SLC12A9-AS1      1  0.03831273
+## 3         MIR320E      1  0.02864717
+## 4          SMG1P6      1  0.02571635
+## 5  TMEM110-MUSTN1      1  0.02477292
+## 6          DLEU2L      1  0.02366440
+## 7           URAHP      1  0.02339192
+## 8           SMC1B      1  0.02310373
+## 9       MAP1LC3B2      1  0.02304964
+## 10       ELOA-AS1      1  0.02207229</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb38-1"></a><span class="co">#Top negative coefficients</span></span>
+<span id="cb38-2"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb38-2"></a>REG.COEF <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(value) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dt">n=</span><span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##          row column        value
+## 1     PKD2L2      1 -0.004160983
+## 2   Z73965.1      1 -0.004033330
+## 3  MAP1LC3B2      1 -0.003156425
+## 4      CADM2      1 -0.002682255
+## 5     PMS2P6      1 -0.002630137
+## 6     ALG1L2      1 -0.002607562
+## 7      NODAL      1 -0.002595879
+## 8    NOXRED1      1 -0.002311842
+## 9       IQUB      1 -0.002070080
+## 10     CD160      1 -0.001994387</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="multitask-mvtboost-for-predicting-multiple-behaviors-from-placental-transcriptome.html#cb40-1"></a>ANX.COEF <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(value) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dt">n=</span><span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##          row column       value
+## 1   PABPC1P4      1 -0.02855627
+## 2   SMC5-AS1      1 -0.02671643
+## 3      GLIDR      1 -0.02238008
+## 4     PMS2P6      1 -0.02209330
+## 5      SLIT1      1 -0.02095026
+## 6  LINC02606      1 -0.01951022
+## 7   RN7SKP80      1 -0.01770279
+## 8   ATE1-AS1      1 -0.01617622
+## 9        MYB      1 -0.01551098
+## 10    VPS33B      1 -0.01518836</code></pre>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="supervised-regression-modelling.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

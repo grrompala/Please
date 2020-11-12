@@ -1,0 +1,181 @@
+# Multitask mvtboost for predicting multiple behaviors from placental transcriptome -- 
+
+
+
+```{r}
+
+suppressPackageStartupMessages({
+library(glmnet)  # Loads glmnet package
+library(caret)
+library(plyr)
+library(gganimate)
+library(gapminder)
+library(cowplot)
+library(directlabels)
+library(gifski)
+library(transformr)
+library(RUncommon)
+library(tidyr)
+library(broom)
+})
+
+#working.dir="C:/Users/grrompala/Desktop"  # working directory
+#setwd(working.dir)
+
+## Import counts and metadata as matrix [make sure there are no NAs]
+counts <- read.csv("counts.csv",header=T,row.names=1)
+meta <- as.matrix(read.csv("meta.csv",header=T,row.names=1))
+counts <- as.matrix(t(counts[,rownames(meta)]))
+
+```
+
+Set seed for reproducibility
+```{r}
+set.seed(777)
+```
+
+Determine Training and Test Sets: making 3 training:test partitions here
+```{r}
+
+Y.cont <- meta[,1]  # replace with variable of choice 
+names(Y.cont) <- rownames(meta)
+train.parts <- createDataPartition(Y.cont,p=.8,list=TRUE,times=3)
+
+
+```
+
+Cross-validation training
+```{r,warning=FALSE}
+
+options(width = 60)
+
+out <- lapply(train.parts,function(L){
+       
+
+
+
+
+
+
+
+
+## Cross-validation training
+
+list.of.fits <- list()
+for (i in 0:10) {
+  ## Here's what's going on in this loop...
+  ## We are testing alpha = i/10. This means we are testing
+  ## alpha = 0/10 = 0 on the first iteration, alpha = 1/10 = 0.1 on
+  ## the second iteration etc.
+  
+  ## First, make a variable name that we can use later to refer
+  ## to the model optimized for a specific alpha.
+  ## For example, when alpha = 0, we will be able to refer to 
+  ## that model with the variable name "alpha0".
+  fit.name <- paste0("alpha", i/10)
+  
+  ## Now fit a model (i.e. optimize lambda) and store it in a list that 
+  ## uses the variable name we just created as the reference.
+  list.of.fits[[fit.name]] <-
+    cv.glmnet(counts[L,], meta[L,],nfolds=10, type.measure="mse", alpha=i/10, family="mgaussian")
+}
+return(list(FITS=list.of.fits))
+})
+```
+
+## compare best alpha across train-test partitions
+```{r,warning=FALSE}
+
+new <- lapply(out,function(L){
+ lambda.min <- vector()
+ for(x in 1:11){
+ x<- L$FITS[[x]]$lambda.min
+ lambda.min <- append(lambda.min,x)
+ }
+ return(lambda.min)
+
+  })
+
+# Final lambda.se
+NAMES <- names(out$Resample1$FITS)
+lambda <- ldply(new,rbind)
+colnames(lambda)[2:12] <- NAMES
+
+```
+
+Inspect the minimum lambda values for each alpha. 
+
+```{r}
+
+#resample.summary$ID <- rep(1:10,times=6,each=1)
+
+LAMBDA <- gather(lambda,key="Alpha",value ="Lambda",-.id )
+LAMBDA$Alpha <- stringr::str_replace_all(LAMBDA$Alpha,"alpha","")
+LAMBDA$Alpha <- as.numeric(LAMBDA$Alpha)
+
+p <- ggplot(LAMBDA, aes(x=Alpha, y=Lambda,group=as.factor(.id),color=as.factor(.id))) +
+     geom_line()+
+     geom_point(alpha = 0.7, show.legend = FALSE) +
+    scale_x_continuous(breaks=seq(0,1,by=0.1))+
+     ylim(0,40)+
+     scale_color_discrete(name="Comparing Best Lambda")+
+     labs(x="Alpha value",y="Lambda.min",title="Best Lambda")+
+    # transition_reveal(Alpha) +     ## If you want to animate
+     theme(
+     plot.title = element_text(face="bold")
+     )
+# If you want to animate
+#animate(p, duration = 8, fps = 50, width = 700, height = 500, renderer = gifski_renderer(),end_pause = 100)
+p
+```
+
+
+Now we see which alpha (0, 0.1, ... , 0.9, 1) does the best job predicting the values in the Testing dataset.
+```{r,warning=FALSE}
+results <- data.frame()
+predicted <- list()
+ticker <- 1
+
+mine <- lapply(out,function(L){
+  
+for (i in 0:10) {
+  fit.name <- paste0("alpha", i/10)
+  x <- train.parts[[ticker]]
+  ## Use each model to predict 'y' given the Testing dataset
+  predicted[[fit.name]] <- predict(L$FITS[[fit.name]], s=L$FITS[[fit.name]]$lambda.min,newx=counts[-x,]) # lamda.1se gives me same values for all)
+  dat.ANX <- data.frame(predicted[[fit.name]])[,1]
+  dat.REG <- data.frame(predicted[[fit.name]])[,2]
+  ## Calculate the Mean Squared Error...
+  mse.ANX <- mean((meta[-x,1]-dat.ANX)^2)
+  cor.ANX <- cor(meta[-x,1],dat.ANX)
+  mse.REG <- mean((meta[-x,2]-dat.REG)^2)
+  cor.REG <- cor(meta[-x,2],dat.REG)
+  ## Store the results
+  temp <- data.frame(alpha=i/10, mse.ANX=mse.ANX,mse.REG=mse.REG,cor.ANX=cor.ANX,cor.REG=cor.REG)
+  results <- rbind(results, temp)
+}
+ticker <- ticker+1
+results
+})
+mine
+```
+Get top coefficients
+```{r,warning=F}
+
+bb <- coef(out$Resample1$FITS$alpha0.1,s=out$Resample1$FITS$alpha0.1$lambda.min)
+ANX.COEF <- tidy(bb$STAI_TTO)
+REG.COEF <- tidy(bb$REG)
+```
+
+```{r} 
+#Top positive coefficients
+REG.COEF %>% arrange(desc(value)) %>% head(n=10)
+ANX.COEF %>% arrange(desc(value)) %>% head(n=10)
+```
+
+```{r}
+#Top negative coefficients
+REG.COEF %>% arrange(value) %>% head(n=10)
+ANX.COEF %>% arrange(value) %>% head(n=10)
+```
+

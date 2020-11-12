@@ -41,8 +41,8 @@ library(RUncommon)
                               })
 
 
-working.dir="C:/Users/grrompala/Desktop"  # working directory
-setwd(working.dir)
+# working.dir="C:/Users/grrompala/Desktop"  # working directory
+# setwd(working.dir)
 
 # Load in your gene counts and metadata 
 counts <- read.csv("counts.csv",header=T,row.names=1) # raw gene counts for each subject
@@ -377,7 +377,7 @@ TWO <- DF %>% select(REAL,SampleID,Order) %>% mutate(LABEL="REAL VALUE")
 colnames(TWO)[1] <- "PRED"
 all.pred <- rbind(ONE,TWO)
 
-p <- ggplot(all.pred %>% filter(trait=="REG"), aes(x=PRED, y=reorder(SampleID,Order),color=LABEL)) +
+  ggplot(all.pred %>% filter(trait=="REG"), aes(x=PRED, y=reorder(SampleID,Order),color=LABEL)) +
   geom_point(alpha = 0.7,size=3)+
   labs(title="Predicting Child Emotional Regulation", x = 'Emotional Regulation Score', y = 'Subjects') +
   scale_color_manual(values=c("#FF0000","#0000FF"),)+  
@@ -387,6 +387,8 @@ p <- ggplot(all.pred %>% filter(trait=="REG"), aes(x=PRED, y=reorder(SampleID,Or
   axis.text.x = element_text(size=12),
   axis.text.y = element_text(size=6),
   axis.title.x=element_text(face="bold"),
-  axis.title.y=element_text(face="bold"))
+  axis.title.y=element_text(face="bold"),
+  panel.border = element_rect(colour = "black", fill=NA, size=5))
+ 
 
 ```
